@@ -3,7 +3,7 @@ import mysql, { Pool } from "mysql2/promise";
 
 dotenv.config();
 
-class MySQLConnector {
+export class MySQLConnector {
   _pool: Pool;
 
   constructor() {
@@ -16,7 +16,7 @@ class MySQLConnector {
     });
   }
 
-  async query(query: string, paramsArray: Array<string | number | null>) {
+  async query(query: string, paramsArray?: Array<string | number | null>) {
     const [rows, _fields] = await this._pool.query(query, paramsArray);
     return rows;
   }
