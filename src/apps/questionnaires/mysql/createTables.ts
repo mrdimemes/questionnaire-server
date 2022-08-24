@@ -11,39 +11,39 @@ export const createTables = async (connector: MySQLConnector) => {
 const createQuestionnairesTable = async (connector: MySQLConnector) => {
   connector.query(
     "CREATE TABLE questionnaires (" +
-    "questionnaire_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
-    "questionnaire_label VARCHAR(200) NOT NULL, " +
-    "questionnaire_about VARCHAR(2000) NOT NULL )"
+    "id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
+    "label VARCHAR(200) NOT NULL, " +
+    "about VARCHAR(2000) NOT NULL )"
   );
 }
 
 const createQuestionsTable = async (connector: MySQLConnector) => {
   connector.query(
     "CREATE TABLE questions (" +
-    "question_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
+    "id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
     "questionnaire_id INT NOT NULL, " +
     "question_type VARCHAR(30) NOT NULL, " +
     "question_text VARCHAR(600) NOT NULL, " +
-    "question_is_required BOOLEAN NOT NULL, " +
-    "FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(questionnaire_id) )"
+    "is_required BOOLEAN NOT NULL, " +
+    "FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) )"
   );
 }
 
 const createFieldsTable = async (connector: MySQLConnector) => {
   connector.query(
     "CREATE TABLE fields (" +
-    "field_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
+    "id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
     "question_id INT NOT NULL, " +
     "field_text VARCHAR(100) NOT NULL, " +
-    "FOREIGN KEY (question_id) REFERENCES questions(question_id) )"
+    "FOREIGN KEY (question_id) REFERENCES questions(id) )"
   );
 }
 
 const createTagsTable = async (connector: MySQLConnector) => {
   connector.query(
     "CREATE TABLE tags (" +
-    "tag_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
-    "tag_label VARCHAR(30) NOT NULL )"
+    "id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
+    "label VARCHAR(30) NOT NULL )"
   );
 }
 
