@@ -1,6 +1,6 @@
 import MySQLConnector from "src/apps/mysql-connector";
 import { ResultSetHeader } from "mysql2/promise";
-import { Questionnaire, Question, Field } from "../models";
+import { Questionnaire, Question, Field } from "./models";
 
 interface QuestionParam {
   questionnaireId: number;
@@ -14,7 +14,7 @@ interface QuestionnaireParam {
   about: string;
 }
 
-class QuestionnaireController {
+class QuestionnaireConnector {
   private connector = MySQLConnector;
 
   async addField(questionId: number, text: string) {
@@ -98,4 +98,4 @@ class QuestionnaireController {
   }
 }
 
-export default new QuestionnaireController();
+export default new QuestionnaireConnector();

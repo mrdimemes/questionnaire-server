@@ -1,8 +1,8 @@
 import MySQLConnector from "src/apps/mysql-connector";
 import { ResultSetHeader } from "mysql2/promise";
-import { Tag } from "../models";
+import { Tag } from "./models";
 
-class TagController {
+class TagConnector {
   private connector = MySQLConnector;
 
   async addTag(label: string) {
@@ -17,6 +17,13 @@ class TagController {
     return result[0];
   }
 
+  async getTags() {
+    const sql = "SELECT * FROM tags";
+    const result = await this.connector.query(sql) as Tag[];
+    if (result.length === 0) throw Error("Tags table is empty!");
+    return result;
+  }
+
   async removeTag(id: number) {
     const sql = "DELETE FROM tags WHERE id = ?";
     const resultHeader = await this.connector.query(
@@ -25,4 +32,4 @@ class TagController {
   }
 }
 
-export default new TagController();
+export default new TagConnector();

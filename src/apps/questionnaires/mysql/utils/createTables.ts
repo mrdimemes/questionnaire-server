@@ -51,6 +51,8 @@ const createQuestionnairesTagsTable = async (connector: MySQLConnector) => {
   connector.query(
     "CREATE TABLE questionnaires_tags (" +
     "questionnaire_id INT NOT NULL, " +
-    "tag_id INT NOT NULL )"
+    "tag_id INT NOT NULL, " +
+    "FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id), " +
+    "FOREIGN KEY (tag_id) REFERENCES tags(id) )"
   );
 }
