@@ -2,24 +2,14 @@ import MySQLConnector from "src/apps/mysql-connector";
 import { ResultSetHeader } from "mysql2/promise";
 import { Questionnaire, Question, Field } from "./models";
 
-interface QuestionParam {
-  questionnaireId: number;
-  questionType: string;
-  text: string;
-  isRequired: boolean;
-}
-
-interface QuestionnaireParam {
-  label: string;
-  about: string;
-}
-
 class QuestionnaireConnector {
   private connector = MySQLConnector;
 
   async addField(questionId: number, text: string) {
     const sql = "INSERT INTO fields (question_id, field_text) VALUES (?, ?)";
-    await this.connector.query(sql, [questionId, text]);
+    const resultHeader = await this.connector.query(
+      sql, [questionId, text]) as ResultSetHeader;
+    return resultHeader.insertId;
   }
 
   async findField(id: number) {
@@ -41,18 +31,25 @@ class QuestionnaireConnector {
     const resultHeader = await this.connector.query(
       sql, [id]) as ResultSetHeader;
     if (resultHeader.affectedRows === 0) throw Error("Field not found");
+    return resultHeader.affectedRows;
   }
 
-  async addQuestion(question: QuestionParam) {
+  async addQuestion(
+    questionnaireId: number,
+    questionType: string,
+    text: string,
+    isRequired: boolean
+  ) {
     const sql = "INSERT INTO questions " +
       "(questionnaire_id, question_type, question_text, is_required) " +
       "VALUES (?, ?, ?, ?)";
-    await this.connector.query(sql, [
-      question.questionnaireId,
-      question.questionType,
-      question.text,
-      Number(question.isRequired)
-    ]);
+    const resultHeader = await this.connector.query(sql, [
+      questionnaireId,
+      questionType,
+      text,
+      Number(isRequired)
+    ]) as ResultSetHeader;
+    return resultHeader.insertId;
   }
 
   async findQuestion(id: number) {
@@ -75,12 +72,14 @@ class QuestionnaireConnector {
     const resultHeader = await this.connector.query(
       sql, [id]) as ResultSetHeader;
     if (resultHeader.affectedRows === 0) throw Error("Question not found");
+    return resultHeader.affectedRows;
   }
 
-  async addQuestionnaire(questionnaire: QuestionnaireParam) {
+  async addQuestionnaire(label: string, about: string) {
     const sql = "INSERT INTO questionnaires (label, about) VALUES (?, ?)";
-    await this.connector.query(
-      sql, [questionnaire.label, questionnaire.about]);
+    const resultHeader = await this.connector.query(
+      sql, [label, about]) as ResultSetHeader;
+    return resultHeader.insertId;
   }
 
   async findQuestionnaire(id: number) {
@@ -95,6 +94,7 @@ class QuestionnaireConnector {
     const resultHeader = await this.connector.query(
       sql, [id]) as ResultSetHeader;
     if (resultHeader.affectedRows === 0) throw Error("Questionnaire not found");
+    return resultHeader.affectedRows;
   }
 }
 

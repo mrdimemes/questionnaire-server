@@ -7,7 +7,9 @@ class TagConnector {
 
   async addTag(label: string) {
     const sql = "INSERT INTO tags (label) VALUES (?)";
-    await this.connector.query(sql, [label]);
+    const resultHeader = await this.connector.query(
+      sql, [label]) as ResultSetHeader;
+    return resultHeader.insertId;
   }
 
   async findTag(id: number) {
@@ -29,6 +31,7 @@ class TagConnector {
     const resultHeader = await this.connector.query(
       sql, [id]) as ResultSetHeader;
     if (resultHeader.affectedRows === 0) throw Error("Tag not found");
+    return resultHeader.affectedRows;
   }
 }
 
