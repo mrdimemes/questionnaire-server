@@ -34,6 +34,14 @@ class QuestionnaireConnector {
     return resultHeader.affectedRows;
   }
 
+  async removeFieldsByQuestionId(questionId: number) {
+    const sql = "DELETE FROM fields WHERE question_id = ?";
+    const resultHeader = await this.connector.query(
+      sql, [questionId]) as ResultSetHeader;
+    if (resultHeader.affectedRows === 0) throw Error("Fields not found");
+    return resultHeader.affectedRows;
+  }
+
   async addQuestion(
     questionnaireId: number,
     questionType: string,

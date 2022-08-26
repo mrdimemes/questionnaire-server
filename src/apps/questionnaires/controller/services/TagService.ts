@@ -6,19 +6,19 @@ class TagService {
   private relationConnector = RelationConnector;
 
   async addTag(label: string) {
-    this.tagConnector.addTag(label)
+    await this.tagConnector.addTag(label)
   }
 
   async removeTag(id: number) {
-    this.tagConnector.removeTag(id)
+    await this.tagConnector.removeTag(id)
   }
 
   async getTags() {
     const tags = await this.tagConnector.getTags();
     // !!! not optimized
     return Promise.all(tags.map(async (tag) => {
-      const relations = await this.relationConnector.findQuestionnairesByTag(
-        tag.id);
+      const relations = await this.relationConnector
+        .findQuestionnairesByTag(tag.id);
       return new TagDTO(tag.id, tag.label, relations.length);
     }))
   }
