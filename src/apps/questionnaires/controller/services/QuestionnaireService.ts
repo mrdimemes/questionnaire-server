@@ -1,4 +1,5 @@
 import { QuestionnaireConnector, RelationConnector } from "../../mysql";
+import { QuestionnaireCardDTO } from "../../DTOs";
 
 class QuestionnaireService {
   private questionnaireConnector = QuestionnaireConnector;
@@ -86,6 +87,20 @@ class QuestionnaireService {
   async detachTagFromQuestionnaire(questionnaireId: number, tagId: number) {
     await this.relationConnector
       .removeQuestionnaireTagRelation(questionnaireId, tagId);
+  }
+
+  async getQuestionnaireCards() {
+    const questionnaires = await this.questionnaireConnector
+      .getQuestionnaires();
+    return Promise.all(questionnaires.map(async (questionnaire) => {
+      const questionnaireTagRelations = await this.relationConnector
+        .findTagsByQuestionnaire(questionnaire.id);
+      return new QuestionnaireCardDTO(
+        questionnaire.id,
+        questionnaire.label,
+        questionnaireTagRelations.map(relation => relation.tag_id)
+      );
+    }))
   }
 }
 

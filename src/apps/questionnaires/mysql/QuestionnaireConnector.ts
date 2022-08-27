@@ -102,6 +102,11 @@ class QuestionnaireConnector {
     if (resultHeader.affectedRows === 0) throw Error("Questionnaire not found");
     return resultHeader.affectedRows;
   }
+
+  async getQuestionnaires() {
+    const sql = "SELECT * FROM questionnaires";
+    return await this.connector.query(sql) as Questionnaire[];
+  }
 }
 
 export default new QuestionnaireConnector();
