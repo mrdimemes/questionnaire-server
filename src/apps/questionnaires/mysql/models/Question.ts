@@ -1,9 +1,9 @@
 interface Question {
   id: number;
-  questionnaireId: number;
-  questionType: string;
-  text: string;
-  isRequired: boolean;
+  questionnaire_id: number;
+  question_type: string;
+  question_text: string;
+  is_required: boolean;
 }
 
 export default Question

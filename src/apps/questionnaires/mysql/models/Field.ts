@@ -1,7 +1,7 @@
 interface Field {
   id: number;
-  quuestionId: number;
-  text: string;
+  question_id: number;
+  field_text: string;
 }
 
 export default Field
