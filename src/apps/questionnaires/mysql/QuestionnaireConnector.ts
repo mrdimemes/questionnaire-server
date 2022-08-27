@@ -69,10 +69,8 @@ class QuestionnaireConnector {
 
   async findQuestionnaireQuestions(questionnaireId: number) {
     const sql = "SELECT * FROM questions WHERE questionnaire_id = ?";
-    const result = await this.connector.query(
+    return await this.connector.query(
       sql, [questionnaireId]) as Question[];
-    if (result.length === 0) throw Error("Questions not found");
-    return result;
   }
 
   async removeQuestion(id: number) {

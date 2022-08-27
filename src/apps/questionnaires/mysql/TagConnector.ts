@@ -21,9 +21,7 @@ class TagConnector {
 
   async getTags() {
     const sql = "SELECT * FROM tags";
-    const result = await this.connector.query(sql) as Tag[];
-    if (result.length === 0) throw Error("Tags table is empty!");
-    return result;
+    return await this.connector.query(sql) as Tag[];
   }
 
   async removeTag(id: number) {

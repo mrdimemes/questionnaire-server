@@ -13,18 +13,14 @@ class RelationConnector {
 
   async findTagsByQuestionnaire(questionnaire_id: number) {
     const sql = "SELECT * FROM questionnaires_tags WHERE questionnaire_id = ?";
-    const result = await this.connector.query(
+    return await this.connector.query(
       sql, [questionnaire_id]) as QuestionnaireTagRelation[];
-    if (result.length === 0) throw Error("Tags not found");
-    return result;
   }
 
   async findQuestionnairesByTag(tag_id: number) {
     const sql = "SELECT * FROM questionnaires_tags WHERE tag_id = ?";
-    const result = await this.connector.query(
+    return await this.connector.query(
       sql, [tag_id]) as QuestionnaireTagRelation[];
-    if (result.length === 0) throw Error("Questionnaires not found");
-    return result;
   }
 
   async removeQuestionnaireTagRelation(
