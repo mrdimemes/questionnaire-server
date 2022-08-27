@@ -15,6 +15,12 @@ class QuestionnairesController {
       .getQuestionnaireCards();
     return res.json({ "questionnaires": questionnaireCardDTOs });
   }
+
+  async getQuestionnaire(req: Request, res: Response, _next: Function) {
+    const questionnaireDTO = await this.questionnaireService
+      .getQuestionnaire(Number(req.params.id));
+    return res.json({ "questionnaire": questionnaireDTO });
+  }
 }
 
 export default new QuestionnairesController();

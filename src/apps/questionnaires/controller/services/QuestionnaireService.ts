@@ -1,5 +1,5 @@
 import { QuestionnaireConnector, RelationConnector } from "../../mysql";
-import { QuestionnaireCardDTO } from "../../DTOs";
+import { QuestionnaireDTO, QuestionnaireCardDTO, FieldDTO, QuestionDTO } from "../../DTOs";
 
 class QuestionnaireService {
   private questionnaireConnector = QuestionnaireConnector;
@@ -40,7 +40,7 @@ class QuestionnaireService {
       .findQuestionnaireQuestions(questionnaireId);
     for (const question of questions) {
       affectedRows += (await this.removeQuestion(question.id)).affectedRows;
-    };
+    }
     affectedRows += await this.relationConnector
       .removeTagsByQuestionnaire(questionnaireId)
     return { affectedRows };
@@ -87,6 +87,36 @@ class QuestionnaireService {
   async detachTagFromQuestionnaire(questionnaireId: number, tagId: number) {
     await this.relationConnector
       .removeQuestionnaireTagRelation(questionnaireId, tagId);
+  }
+
+  async getQuestionnaire(questionnaireId: number) {
+    const questionnaire = await this.questionnaireConnector
+      .findQuestionnaire(questionnaireId);
+    const questions = await this.questionnaireConnector
+      .findQuestionnaireQuestions(questionnaireId);
+    const questionsDTOs = await Promise.all(questions.map(async (question) => {
+      const fields = await this.questionnaireConnector
+        .findQuestionFields(question.id);
+      const fieldDTOs = fields.map(field => {
+        return new FieldDTO(field.id, field.field_text)
+      });
+      return new QuestionDTO(
+        question.id,
+        question.question_type,
+        question.question_text,
+        question.is_required,
+        fieldDTOs
+      );
+    }))
+    const questionnaireTagRelations = await this.relationConnector
+      .findTagsByQuestionnaire(questionnaire.id);
+    return new QuestionnaireDTO(
+      questionnaireId,
+      questionnaire.label,
+      questionnaire.about,
+      questionnaireTagRelations.map(relation => relation.tag_id),
+      questionsDTOs
+    )
   }
 
   async getQuestionnaireCards() {
