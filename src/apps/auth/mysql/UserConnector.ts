@@ -5,7 +5,7 @@ import { User } from "./models";
 class UserConnector {
   private connector = MySQLConnector;
 
-  async addUser(email: number, name: string, passwordHash: string) {
+  async addUser(email: string, name: string, passwordHash: string) {
     const sql = "INSERT INTO users (email, name, password_hash) " +
       "VALUES (?, ?, ?)";
     const resultHeader = await this.connector.query(
