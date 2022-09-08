@@ -5,11 +5,10 @@ import { RefreshToken } from "./models";
 class RefreshTokenConnector {
   private connector = MySQLConnector;
 
-  async addRefreshToken(userId: number, uploadDate: string, token: string) {
-    const sql = "INSERT INTO refresh_tokens (user_id, upload_date, jwt) " +
-      "VALUES (?, ?, ?)";
+  async addRefreshToken(userId: number, token: string) {
+    const sql = "INSERT INTO refresh_tokens (user_id, jwt) VALUES (?, ?, ?)";
     const resultHeader = await this.connector.query(
-      sql, [userId, uploadDate, token]) as ResultSetHeader;
+      sql, [userId, token]) as ResultSetHeader;
     return resultHeader.insertId;
   }
 
@@ -37,7 +36,7 @@ class RefreshTokenConnector {
     return resultHeader.affectedRows;
   }
 
-  async removeRefreshToken(token: number) {
+  async removeRefreshToken(token: string) {
     const sql = "DELETE FROM refresh_tokens WHERE jwt = ?";
     const resultHeader = await this.connector.query(
       sql, [token]) as ResultSetHeader;
