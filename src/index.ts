@@ -3,11 +3,6 @@ import express from "express";
 import cors from "cors";
 import questionnairesRouter from "src/apps/questionnaires/router";
 
-import conn from "./apps/mysql-connector";
-import { createTables } from "./apps/auth/mysql/utils/createTables";
-
-createTables(conn);
-
 dotenv.config();
 
 const PORT: number = Number(process.env.PORT) || 5000;
