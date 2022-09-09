@@ -20,6 +20,13 @@ class UserConnector {
     return result[0];
   }
 
+  async findUserByEmail(email: string) {
+    const sql = "SELECT * FROM users WHERE email = ?";
+    const result = await this.connector.query(sql, [email]) as User[];
+    if (result.length === 0) throw Error("User not found");
+    return result[0];
+  }
+
   async removeUser(id: number) {
     const sql = "DELETE FROM users WHERE id = ?";
     const resultHeader = await this.connector.query(
