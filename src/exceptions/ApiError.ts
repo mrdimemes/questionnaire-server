@@ -13,6 +13,10 @@ class ApiError extends Error {
   static BadRequestError(massage: string, errors?: object[]) {
     return new ApiError(400, massage, errors);
   }
+
+  static NotFoundError(massage: string, errors?: object[]) {
+    return new ApiError(404, massage, errors);
+  }
 }
 
 export default ApiError;

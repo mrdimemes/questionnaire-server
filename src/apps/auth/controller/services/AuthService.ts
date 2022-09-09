@@ -1,17 +1,16 @@
 import { UserService, HashService, TokenService } from "./";
 import { UserDTO, LoginResponseDTO, RefreshResponseDTO } from "../../DTOs";
-import { TokenPayload } from "../../types";
+import { User } from "../../mysql/models";
+import { ApiError } from "src/exceptions";
+import { AuthError } from "../../exceptions";
+import type { TokenPayload, TokenPair } from "../../types";
 
 class AuthService {
   private userService = UserService;
   private hashService = HashService;
   private tokenService = TokenService;
 
-  async registration(email: string, name: string, password: string) {
-    const passwordHash = this.hashService.getHash(password);
-    const userId = await this.userService.addUser(email, name, passwordHash);
-    const tokens = this.tokenService.generateTokens({ userId });
-    const user = await this.userService.findUser(userId);
+  private getLoginResponse(user: User, tokens: TokenPair) {
     const userDTO = new UserDTO(user.name, user.email, user.is_admin);
     return new LoginResponseDTO(
       userDTO,
@@ -20,18 +19,31 @@ class AuthService {
     );
   }
 
+  async registration(email: string, name: string, password: string) {
+    const passwordHash = this.hashService.getHash(password);
+    const userId = await this.userService.addUser(email, name, passwordHash);
+    const tokens = this.tokenService.generateTokens({ userId });
+    const user = await this.userService.findUser(userId);
+    return this.getLoginResponse(user, tokens);
+  }
+
   async login(email: string, password: string) {
-    const user = await this.userService.findUserByEmail(email);
-    const isPasswordsMatch =
-      this.hashService.checkHash(password, user.password_hash);
-    if (!isPasswordsMatch) throw Error("Wrong password");
-    const tokens = this.tokenService.generateTokens({ userId: user.id });
-    const userDTO = new UserDTO(user.name, user.email, user.is_admin);
-    return new LoginResponseDTO(
-      userDTO,
-      tokens.accessToken,
-      tokens.refreshToken
-    );
+    try {
+      const user = await this.userService.findUserByEmail(email);
+      const isPasswordsMatch =
+        this.hashService.checkHash(password, user.password_hash);
+      if (!isPasswordsMatch) {
+        throw ApiError.BadRequestError("Неправильный пароль");
+      }
+      const tokens = this.tokenService.generateTokens({ userId: user.id });
+      return this.getLoginResponse(user, tokens);
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 400) {
+        throw ApiError.BadRequestError("Неправильный логин или пароль");
+      } else {
+        throw err;
+      }
+    }
   }
 
   async logout(refreshToken: string) {
@@ -39,11 +51,15 @@ class AuthService {
   }
 
   async refresh(refreshToken: string) {
-    const tokenPayload =
-      this.tokenService.validateRefreshToken(refreshToken) as TokenPayload;
-    await this.tokenService.removeRefreshToken(refreshToken);
-    const tokens = this.tokenService.generateTokens(tokenPayload);
-    return new RefreshResponseDTO(tokens.accessToken, tokens.refreshToken);
+    try {
+      const tokenPayload =
+        this.tokenService.validateRefreshToken(refreshToken) as TokenPayload;
+      await this.tokenService.removeRefreshToken(refreshToken);
+      const tokens = this.tokenService.generateTokens(tokenPayload);
+      return new RefreshResponseDTO(tokens.accessToken, tokens.refreshToken);
+    } catch (err) {
+      throw AuthError.UnauthorizedError("Недействительный токен");
+    }
   }
 }
 

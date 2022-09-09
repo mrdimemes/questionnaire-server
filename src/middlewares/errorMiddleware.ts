@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
-import ApiError from "src/exceptions/ApiError";
+import { ApiError } from "src/exceptions";
 
 function errorMiddleware(
-  err: ApiError | Error, _req: Request, res: Response, _next: Function
+  err: ApiError | Error,
+  _req: Request,
+  res: Response,
+  _next: Function
 ) {
   console.log(err);
 
@@ -12,7 +15,7 @@ function errorMiddleware(
       errors: err.errors
     });
   }
-  return res.status(500).json({ massage: "Something broke, beep-boop..." })
+  return res.status(500).json({ massage: "Что-то сломалось. Бип-буп..." })
 }
 
 export default errorMiddleware;

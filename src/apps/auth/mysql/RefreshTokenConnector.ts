@@ -1,6 +1,7 @@
 import MySQLConnector from "src/apps/mysql-connector";
 import { ResultSetHeader } from "mysql2/promise";
 import { RefreshToken } from "./models";
+import { ApiError } from "src/exceptions";
 
 class RefreshTokenConnector {
   private connector = MySQLConnector;
@@ -15,14 +16,18 @@ class RefreshTokenConnector {
   async findRefreshTokenById(id: number) {
     const sql = "SELECT * FROM refresh_tokens WHERE id = ?";
     const result = await this.connector.query(sql, [id]) as RefreshToken[];
-    if (result.length === 0) throw Error("Refresh token not found");
+    if (result.length === 0) {
+      throw ApiError.BadRequestError("Токен не найден");
+    }
     return result[0];
   }
 
   async findRefreshToken(token: string) {
     const sql = "SELECT * FROM refresh_tokens WHERE jwt = ?";
     const result = await this.connector.query(sql, [token]) as RefreshToken[];
-    if (result.length === 0) throw Error("Refresh token not found");
+    if (result.length === 0) {
+      throw ApiError.BadRequestError("Токен не найден");
+    }
     return result[0];
   }
 
@@ -31,7 +36,7 @@ class RefreshTokenConnector {
     const resultHeader = await this.connector.query(
       sql, [id]) as ResultSetHeader;
     if (resultHeader.affectedRows === 0) {
-      throw Error("Refresh token not found");
+      throw ApiError.BadRequestError("Токен не найден");
     }
     return resultHeader.affectedRows;
   }
@@ -41,7 +46,7 @@ class RefreshTokenConnector {
     const resultHeader = await this.connector.query(
       sql, [token]) as ResultSetHeader;
     if (resultHeader.affectedRows === 0) {
-      throw Error("Refresh token not found");
+      throw ApiError.BadRequestError("Токен не найден");
     }
     return resultHeader.affectedRows;
   }
