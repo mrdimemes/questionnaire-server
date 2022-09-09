@@ -7,19 +7,19 @@ class QuestionnairesController {
 
   async getTags(_req: Request, res: Response, _next: Function) {
     const tagDTOs = await this.tagService.getTags();
-    return res.json({ "tags": tagDTOs });
+    return res.json(tagDTOs);
   }
 
   async getQuestionnaireCards(_req: Request, res: Response, _next: Function) {
     const questionnaireCardDTOs = await this.questionnaireService
       .getQuestionnaireCards();
-    return res.json({ "questionnaires": questionnaireCardDTOs });
+    return res.json(questionnaireCardDTOs);
   }
 
   async getQuestionnaire(req: Request, res: Response, _next: Function) {
     const questionnaireDTO = await this.questionnaireService
       .getQuestionnaire(Number(req.params.id));
-    return res.json({ "questionnaire": questionnaireDTO });
+    return res.json(questionnaireDTO);
   }
 }
 
