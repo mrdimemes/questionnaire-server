@@ -15,9 +15,10 @@ app.use(cors({
   credentials: true,
   origin: process.env.CLIENT_URL
 }));
-app.use(errorMiddleware);
 app.use("/questionnaires", questionnairesRouter);
 app.use("/auth", authRouter);
+app.use(errorMiddleware);
+
 
 const startListening = async () => {
   try {
