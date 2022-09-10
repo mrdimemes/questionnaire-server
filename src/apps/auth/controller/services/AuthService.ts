@@ -23,6 +23,7 @@ class AuthService {
     const passwordHash = this.hashService.getHash(password);
     const userId = await this.userService.addUser(email, name, passwordHash);
     const tokens = this.tokenService.generateTokens({ userId });
+    await this.tokenService.saveRefreshToken(userId, tokens.refreshToken);
     const user = await this.userService.findUser(userId);
     return this.getLoginResponse(user, tokens);
   }
@@ -36,6 +37,7 @@ class AuthService {
         throw ApiError.BadRequestError("Неправильный пароль");
       }
       const tokens = this.tokenService.generateTokens({ userId: user.id });
+      await this.tokenService.saveRefreshToken(user.id, tokens.refreshToken);
       return this.getLoginResponse(user, tokens);
     } catch (err) {
       if (err instanceof ApiError && err.status === 400) {

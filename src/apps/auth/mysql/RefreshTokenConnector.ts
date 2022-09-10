@@ -7,7 +7,7 @@ class RefreshTokenConnector {
   private connector = MySQLConnector;
 
   async addRefreshToken(userId: number, token: string) {
-    const sql = "INSERT INTO refresh_tokens (user_id, jwt) VALUES (?, ?, ?)";
+    const sql = "INSERT INTO refresh_tokens (user_id, jwt) VALUES (?, ?)";
     const resultHeader = await this.connector.query(
       sql, [userId, token]) as ResultSetHeader;
     return resultHeader.insertId;
