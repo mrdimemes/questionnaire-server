@@ -1,16 +1,16 @@
 import ApiError from "src/exceptions/ApiError";
 
 class AuthError extends ApiError {
-  constructor(status: number, massage: string, errors?: object[]) {
-    super(status, massage, errors);
+  constructor(status: number, message: string, errors?: object[]) {
+    super(status, message, errors);
   }
 
-  static UnauthorizedError(massage?: string) {
-    return new AuthError(401, massage ?? "Пользователь не авторизован");
+  static UnauthorizedError(message?: string) {
+    return new AuthError(401, message ?? "Пользователь не авторизован");
   }
 
-  static ForbiddenError(massage?: string) {
-    return new AuthError(403, massage ?? "Доступ запрещен");
+  static ForbiddenError(message?: string) {
+    return new AuthError(403, message ?? "Доступ запрещен");
   }
 }
 

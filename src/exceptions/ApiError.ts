@@ -3,19 +3,19 @@ class ApiError extends Error {
   errors?: object[];
 
   constructor(
-    status: number, massage: string, errors?: object[]
+    status: number, message: string, errors?: object[]
   ) {
-    super(massage);
+    super(message);
     this.status = status;
     this.errors = errors;
   }
 
-  static BadRequestError(massage: string, errors?: object[]) {
-    return new ApiError(400, massage, errors);
+  static BadRequestError(message: string, errors?: object[]) {
+    return new ApiError(400, message, errors);
   }
 
-  static NotFoundError(massage: string, errors?: object[]) {
-    return new ApiError(404, massage, errors);
+  static NotFoundError(message: string, errors?: object[]) {
+    return new ApiError(404, message, errors);
   }
 }
 
