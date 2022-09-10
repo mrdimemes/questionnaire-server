@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import questionnairesRouter from "src/apps/questionnaires/router";
+import authRouter from "src/apps/auth/router";
 import { errorMiddleware } from "./middlewares";
 
 dotenv.config();
@@ -15,7 +16,8 @@ app.use(cors({
   origin: process.env.CLIENT_URL
 }));
 app.use(errorMiddleware);
-app.use("/questionnaires", questionnairesRouter)
+app.use("/questionnaires", questionnairesRouter);
+app.use("/auth", authRouter);
 
 const startListening = async () => {
   try {
