@@ -11,7 +11,7 @@ function errorMiddleware(
 
   if (err instanceof ApiError && err.status !== 500) {
     return res.status(err.status).json({
-      massage: err.message,
+      message: err.message,
       errors: err.errors
     });
   }
