@@ -103,9 +103,10 @@ class QuestionnaireConnector {
     return resultHeader.affectedRows;
   }
 
-  async getQuestionnaires() {
-    const sql = "SELECT * FROM questionnaires";
-    return await this.connector.query(sql) as Questionnaire[];
+  async getQuestionnairesBunch(offset: number, rowCount: number) {
+    const sql = "SELECT * FROM questionnaires LIMIT ?, ?";
+    return await this.connector
+      .query(sql, [offset, rowCount]) as Questionnaire[];
   }
 }
 

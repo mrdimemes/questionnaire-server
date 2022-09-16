@@ -119,9 +119,9 @@ class QuestionnaireService {
     )
   }
 
-  async getQuestionnaireCards() {
+  async getQuestionnaireCardPage(startPage: number, bunchSize: number) {
     const questionnaires = await this.questionnaireConnector
-      .getQuestionnaires();
+      .getQuestionnairesBunch((startPage - 1) * bunchSize, bunchSize);
     return Promise.all(questionnaires.map(async (questionnaire) => {
       const questionnaireTagRelations = await this.relationConnector
         .findTagsByQuestionnaire(questionnaire.id);
