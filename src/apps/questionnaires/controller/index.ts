@@ -18,12 +18,12 @@ class QuestionnairesController {
 
   async getQuestionnaireCards(req: Request, res: Response, _next: Function) {
     const { startPage, cardsPerPage } = req.body as CardPageRequestBody;
-    const questionnaireCardDTOs = await this.questionnaireService
+    const page = await this.questionnaireService
       .getQuestionnaireCardPage(
         startPage,
         Math.min(cardsPerPage, this.maxCardsPerPage)
       );
-    return res.json(questionnaireCardDTOs);
+    return res.json(page);
   }
 
   async getQuestionnaire(req: Request, res: Response, _next: Function) {

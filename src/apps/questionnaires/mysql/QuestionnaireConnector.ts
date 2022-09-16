@@ -1,5 +1,5 @@
 import MySQLConnector from "src/apps/mysql-connector";
-import { ResultSetHeader } from "mysql2/promise";
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { Questionnaire, Question, Field } from "./models";
 
 class QuestionnaireConnector {
@@ -107,6 +107,12 @@ class QuestionnaireConnector {
     const sql = "SELECT * FROM questionnaires LIMIT ?, ?";
     return await this.connector
       .query(sql, [offset, rowCount]) as Questionnaire[];
+  }
+
+  async getQuestionnairesCount() {
+    const sql = "SELECT COUNT(*) FROM questionnaires";
+    const result = await this.connector.query(sql) as RowDataPacket;
+    return result[0]["COUNT(*)"] as number;
   }
 }
 

@@ -1,5 +1,11 @@
 import { QuestionnaireConnector, RelationConnector } from "../../mysql";
-import { QuestionnaireDTO, QuestionnaireCardDTO, FieldDTO, QuestionDTO } from "../../DTOs";
+import {
+  QuestionnaireDTO,
+  QuestionnaireCardDTO,
+  QuestionnaireCardsPageDTO,
+  FieldDTO,
+  QuestionDTO
+} from "../../DTOs";
 
 class QuestionnaireService {
   private questionnaireConnector = QuestionnaireConnector;
@@ -120,17 +126,22 @@ class QuestionnaireService {
   }
 
   async getQuestionnaireCardPage(startPage: number, bunchSize: number) {
+    const totalCardsInDB = await this.questionnaireConnector
+      .getQuestionnairesCount();
+    const totalPages = Math.ceil(totalCardsInDB / bunchSize)
     const questionnaires = await this.questionnaireConnector
       .getQuestionnairesBunch((startPage - 1) * bunchSize, bunchSize);
-    return Promise.all(questionnaires.map(async (questionnaire) => {
-      const questionnaireTagRelations = await this.relationConnector
-        .findTagsByQuestionnaire(questionnaire.id);
-      return new QuestionnaireCardDTO(
-        questionnaire.id,
-        questionnaire.label,
-        questionnaireTagRelations.map(relation => relation.tag_id)
-      );
-    }))
+    const cards = await Promise
+      .all(questionnaires.map(async (questionnaire) => {
+        const questionnaireTagRelations = await this.relationConnector
+          .findTagsByQuestionnaire(questionnaire.id);
+        return new QuestionnaireCardDTO(
+          questionnaire.id,
+          questionnaire.label,
+          questionnaireTagRelations.map(relation => relation.tag_id)
+        );
+      }));
+    return new QuestionnaireCardsPageDTO(cards, totalPages);
   }
 }
 
