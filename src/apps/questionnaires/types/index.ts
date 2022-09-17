@@ -1,1 +1,1 @@
-export type { default as CardPageRequestBody } from "./CardPageRequestBody";
+export type { default as GetCardsRequest } from "./GetCardsRequest";

@@ -1,9 +1,10 @@
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { TagService, QuestionnaireService } from "./services";
-import { CardPageRequestBody } from "../types";
+import { GetCardsRequest } from "../types";
 
 dotenv.config();
+
 
 class QuestionnairesController {
   private tagService = TagService;
@@ -16,12 +17,12 @@ class QuestionnairesController {
     return res.json(tagDTOs);
   }
 
-  async getQuestionnaireCards(req: Request, res: Response, _next: Function) {
-    const { startPage, cardsPerPage } = req.body as CardPageRequestBody;
+  async getQuestionnaireCards(req: GetCardsRequest, res: Response, _next: Function) {
+    const { startPage, cardsPerPage } = req.query;
     const page = await this.questionnaireService
       .getQuestionnaireCardPage(
-        startPage,
-        Math.min(cardsPerPage, this.maxCardsPerPage)
+        startPage ?? 1,
+        Math.min(cardsPerPage ?? 10, this.maxCardsPerPage)
       );
     return res.json(page);
   }
