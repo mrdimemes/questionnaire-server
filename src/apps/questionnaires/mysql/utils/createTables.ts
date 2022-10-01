@@ -6,6 +6,8 @@ export const createTables = async (connector: MySQLConnector) => {
   await createFieldsTable(connector);
   await createTagsTable(connector);
   await createQuestionnairesTagsTable(connector);
+  await createAnswersTable(connector);
+  await createAnswerFieldsTable(connector);
 }
 
 const createQuestionnairesTable = async (connector: MySQLConnector) => {
@@ -54,5 +56,29 @@ const createQuestionnairesTagsTable = async (connector: MySQLConnector) => {
     "tag_id INT NOT NULL, " +
     "FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id), " +
     "FOREIGN KEY (tag_id) REFERENCES tags(id) )"
+  );
+}
+
+const createAnswersTable = async (connector: MySQLConnector) => {
+  connector.query(
+    "CREATE TABLE answers (" +
+    "id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
+    "user_id INT, " +
+    "questionnaire_id INT NOT NULL, " +
+    "upload_date DATE NOT NULL DEFAULT (CURRENT_DATE), " +
+    "FOREIGN KEY (user_id) REFERENCES users(id), " +
+    "FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) )"
+  );
+}
+
+const createAnswerFieldsTable = async (connector: MySQLConnector) => {
+  connector.query(
+    "CREATE TABLE answer_fields (" +
+    "id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, " +
+    "answer_id INT NOT NULL, " +
+    "field_id INT NOT NULL, " +
+    "field_value VARCHAR(200), " +
+    "FOREIGN KEY (answer_id) REFERENCES answers(id), " +
+    "FOREIGN KEY (field_id) REFERENCES fields(id) )"
   );
 }
