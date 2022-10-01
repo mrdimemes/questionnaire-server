@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { Request, Response } from "express";
-import { TagService, QuestionnaireService } from "./services";
-import { GetCardsRequest } from "../types";
+import { TagService, QuestionnaireService, AnswerService } from "./services";
+import { GetCardsRequest, SaveAnswerRequestBody } from "../types";
 
 dotenv.config();
 
@@ -9,6 +9,7 @@ dotenv.config();
 class QuestionnairesController {
   private tagService = TagService;
   private questionnaireService = QuestionnaireService;
+  private answerService = AnswerService;
   private maxCardsPerPage =
     Number(process.env.MAX_QUESTIONNAIRE_CARDS_PER_PAGE ?? "50");
 
@@ -31,6 +32,17 @@ class QuestionnairesController {
     const questionnaireDTO = await this.questionnaireService
       .getQuestionnaire(Number(req.params.id));
     return res.json(questionnaireDTO);
+  }
+
+  async saveQuestionnaireAnswer(req: Request, res: Response, next: Function) {
+    try {
+      const { userId, answer } =
+        req.body as SaveAnswerRequestBody;
+      await this.answerService.saveAnswer(answer, userId);
+      return res.json();
+    } catch (err) {
+      next(err);
+    }
   }
 }
 
