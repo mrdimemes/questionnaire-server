@@ -1,11 +1,11 @@
 class UserDTO {
   name: string;
-  email: string;
+  id: number;
   isAdmin: boolean;
 
-  constructor(name: string, email: string, isAdmin: boolean) {
+  constructor(name: string, id: number, isAdmin: boolean) {
     this.name = name;
-    this.email = email;
+    this.id = id;
     this.isAdmin = isAdmin;
   }
 }

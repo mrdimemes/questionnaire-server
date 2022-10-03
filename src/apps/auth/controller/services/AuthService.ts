@@ -11,7 +11,7 @@ class AuthService {
   private tokenService = TokenService;
 
   private getLoginResponse(user: User, tokens: TokenPair) {
-    const userDTO = new UserDTO(user.name, user.email, user.is_admin);
+    const userDTO = new UserDTO(user.name, user.id, user.is_admin);
     return new LoginResponseDTO(
       userDTO,
       tokens.accessToken,
