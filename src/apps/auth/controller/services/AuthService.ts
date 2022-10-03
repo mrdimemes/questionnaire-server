@@ -36,6 +36,7 @@ class AuthService {
       if (!isPasswordsMatch) {
         throw ApiError.BadRequestError("Неправильный пароль");
       }
+      await this.tokenService.removeExpiredTokens(user.id);
       const tokens = this.tokenService.generateTokens({ userId: user.id });
       await this.tokenService.saveRefreshToken(user.id, tokens.refreshToken);
       return this.getLoginResponse(user, tokens);
@@ -57,6 +58,7 @@ class AuthService {
       const tokenPayload =
         this.tokenService.validateRefreshToken(refreshToken) as TokenPayload;
       await this.tokenService.removeRefreshToken(refreshToken);
+      await this.tokenService.removeExpiredTokens(tokenPayload.userId);
       const tokens = this.tokenService.generateTokens(tokenPayload);
       return new RefreshResponseDTO(tokens.accessToken, tokens.refreshToken);
     } catch (err) {

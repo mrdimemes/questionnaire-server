@@ -1,6 +1,10 @@
+import dotenv from "dotenv";
 import Jwt from "jsonwebtoken";
 import { RefreshTokenConnector } from "../../mysql";
 import type { TokenPayload } from "../../types";
+
+dotenv.config();
+
 
 class TokenService {
   private refreshTokenConnector = RefreshTokenConnector;
@@ -25,6 +29,11 @@ class TokenService {
 
   async removeRefreshToken(token: string) {
     return this.refreshTokenConnector.removeRefreshToken(token);
+  }
+
+  async removeExpiredTokens(userId: number) {
+    const lifeTime = Number(process.env.JWT_REFRESH_LIFETIME) ?? 30;
+    await this.refreshTokenConnector.removeExpiredTokens(userId, lifeTime);
   }
 
   validateAccessToken(token: string) {

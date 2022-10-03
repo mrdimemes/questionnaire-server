@@ -1,7 +1,9 @@
+import dotenv from "dotenv";
 import MySQLConnector from "src/apps/mysql-connector";
 import { ResultSetHeader } from "mysql2/promise";
 import { RefreshToken } from "./models";
 import { ApiError } from "src/exceptions";
+
 
 class RefreshTokenConnector {
   private connector = MySQLConnector;
@@ -54,6 +56,14 @@ class RefreshTokenConnector {
   async getUserTokens(userId: number) {
     const sql = "SELECT * FROM refresh_tokens WHERE user_id = ?";
     return await this.connector.query(sql, [userId]) as RefreshToken[];
+  }
+
+  async removeExpiredTokens(userId: number, maxLifeTime: number) {
+    const sql = "DELETE FROM refresh_tokens " +
+      "WHERE user_id = ? AND DATEDIFF(CURDATE(), upload_date) > ?";
+    const resultHeader = await this.connector.query(
+      sql, [userId, maxLifeTime]) as ResultSetHeader;
+    return resultHeader.affectedRows;
   }
 }
 
