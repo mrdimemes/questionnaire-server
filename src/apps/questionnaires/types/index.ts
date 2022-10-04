@@ -3,6 +3,9 @@ export type {
   default as SaveAnswerRequestBody
 } from "./SaveAnswerRequestBody";
 export type {
+  default as AddTagRequestBody
+} from "./AddTagRequestBody";
+export type {
   default as AnswerFieldFromClient
 } from "./AnswerFieldFromClient";
 export type {

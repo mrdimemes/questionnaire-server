@@ -1,8 +1,8 @@
-import { QuestionnaireAnswer } from "./";
+import { AnswerFromClient } from "./";
 
 type SaveAnswerRequestBody = {
   userId?: number;
-  answer: QuestionnaireAnswer;
+  answer: AnswerFromClient;
 }
 
 export default SaveAnswerRequestBody

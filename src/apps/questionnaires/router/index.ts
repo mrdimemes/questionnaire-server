@@ -11,5 +11,6 @@ router.post(
   "/saveAnswer",
   controller.saveQuestionnaireAnswer.bind(controller)
 );
+router.post("/addTag", controller.addTag.bind(controller));
 
 export default router;

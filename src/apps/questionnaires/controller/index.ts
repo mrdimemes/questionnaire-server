@@ -1,7 +1,11 @@
 import dotenv from "dotenv";
 import { Request, Response } from "express";
 import { TagService, QuestionnaireService, AnswerService } from "./services";
-import { GetCardsRequest, SaveAnswerRequestBody } from "../types";
+import {
+  GetCardsRequest,
+  SaveAnswerRequestBody,
+  AddTagRequestBody
+} from "../types";
 
 dotenv.config();
 
@@ -16,6 +20,16 @@ class QuestionnairesController {
   async getTags(_req: Request, res: Response, _next: Function) {
     const tagDTOs = await this.tagService.getTags();
     return res.json(tagDTOs);
+  }
+
+  async addTag(req: Request, res: Response, next: Function) {
+    try {
+      const { label } = req.body as AddTagRequestBody;
+      await this.tagService.addTag(label);
+      return res.json();
+    } catch (err) {
+      next(err);
+    }
   }
 
   async getQuestionnaireCards(req: GetCardsRequest, res: Response, _next: Function) {
