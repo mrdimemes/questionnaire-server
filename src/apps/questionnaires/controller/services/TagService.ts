@@ -6,7 +6,7 @@ class TagService {
   private relationConnector = RelationConnector;
 
   async addTag(label: string) {
-    await this.tagConnector.addTag(label)
+    return this.tagConnector.addTag(label)
   }
 
   async removeTag(tagId: number) {

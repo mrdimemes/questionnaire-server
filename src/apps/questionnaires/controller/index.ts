@@ -26,8 +26,8 @@ class QuestionnairesController {
   async addTag(req: Request, res: Response, next: Function) {
     try {
       const { label } = req.body as AddTagRequestBody;
-      await this.tagService.addTag(label);
-      return res.json();
+      const tagId = await this.tagService.addTag(label);
+      return res.json(tagId);
     } catch (err) {
       next(err);
     }
