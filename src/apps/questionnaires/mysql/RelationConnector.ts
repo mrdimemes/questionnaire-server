@@ -11,13 +11,15 @@ class RelationConnector {
     await this.connector.query(sql, [questionnaire_id, tag_id]);
   }
 
-  async findTagsByQuestionnaire(questionnaire_id: number) {
+  async findQuestionnaireTagRelationsByQuestionnaireId(
+    questionnaire_id: number
+  ) {
     const sql = "SELECT * FROM questionnaires_tags WHERE questionnaire_id = ?";
     return await this.connector.query(
       sql, [questionnaire_id]) as QuestionnaireTagRelation[];
   }
 
-  async findQuestionnairesByTag(tag_id: number) {
+  async findQuestionnaireTagRelationsByTagId(tag_id: number) {
     const sql = "SELECT * FROM questionnaires_tags WHERE tag_id = ?";
     return await this.connector.query(
       sql, [tag_id]) as QuestionnaireTagRelation[];
@@ -34,19 +36,19 @@ class RelationConnector {
     if (resultHeader.affectedRows === 0) throw Error("Relation not found");
   }
 
-  async removeTagsByQuestionnaire(questionnaire_id: number) {
+  async removeQuestionnaireTagRelationsByQuestionnaireId(
+    questionnaire_id: number
+  ) {
     const sql = "DELETE FROM questionnaires_tags WHERE questionnaire_id = ?";
     const resultHeader = await this.connector.query(
       sql, [questionnaire_id]) as ResultSetHeader;
-    if (resultHeader.affectedRows === 0) throw Error("Relations not found");
     return resultHeader.affectedRows;
   }
 
-  async removeQuestionnairesByTag(tag_id: number) {
+  async removeQuestionnaireTagRelationsByTagId(tag_id: number) {
     const sql = "DELETE FROM questionnaires_tags WHERE tag_id = ?";
     const resultHeader = await this.connector.query(
       sql, [tag_id]) as ResultSetHeader;
-    if (resultHeader.affectedRows === 0) throw Error("Relations not found");
     return resultHeader.affectedRows;
   }
 }

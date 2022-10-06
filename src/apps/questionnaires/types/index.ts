@@ -6,6 +6,9 @@ export type {
   default as AddTagRequestBody
 } from "./AddTagRequestBody";
 export type {
+  default as RemoveTagRequestBody
+} from "./RemoveTagRequestBody";
+export type {
   default as AnswerFieldFromClient
 } from "./AnswerFieldFromClient";
 export type {

@@ -4,7 +4,8 @@ import { TagService, QuestionnaireService, AnswerService } from "./services";
 import {
   GetCardsRequest,
   SaveAnswerRequestBody,
-  AddTagRequestBody
+  AddTagRequestBody,
+  RemoveTagRequestBody
 } from "../types";
 
 dotenv.config();
@@ -26,6 +27,16 @@ class QuestionnairesController {
     try {
       const { label } = req.body as AddTagRequestBody;
       await this.tagService.addTag(label);
+      return res.json();
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async removeTag(req: Request, res: Response, next: Function) {
+    try {
+      const { tagId } = req.body as RemoveTagRequestBody;
+      await this.tagService.removeTag(tagId);
       return res.json();
     } catch (err) {
       next(err);

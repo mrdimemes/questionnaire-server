@@ -48,7 +48,7 @@ class QuestionnaireService {
       affectedRows += (await this.removeQuestion(question.id)).affectedRows;
     }
     affectedRows += await this.relationConnector
-      .removeTagsByQuestionnaire(questionnaireId)
+      .removeQuestionnaireTagRelationsByQuestionnaireId(questionnaireId)
     return { affectedRows };
   }
 
@@ -115,7 +115,7 @@ class QuestionnaireService {
       );
     }))
     const questionnaireTagRelations = await this.relationConnector
-      .findTagsByQuestionnaire(questionnaire.id);
+      .findQuestionnaireTagRelationsByQuestionnaireId(questionnaire.id);
     return new QuestionnaireDTO(
       questionnaireId,
       questionnaire.label,
@@ -134,7 +134,7 @@ class QuestionnaireService {
     const cards = await Promise
       .all(questionnaires.map(async (questionnaire) => {
         const questionnaireTagRelations = await this.relationConnector
-          .findTagsByQuestionnaire(questionnaire.id);
+          .findQuestionnaireTagRelationsByQuestionnaireId(questionnaire.id);
         return new QuestionnaireCardDTO(
           questionnaire.id,
           questionnaire.label,
