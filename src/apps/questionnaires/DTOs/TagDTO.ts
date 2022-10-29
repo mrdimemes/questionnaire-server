@@ -1,12 +1,12 @@
 class TagDTO {
   id: number;
   label: string;
-  freq: number;
+  frequency: number;
 
-  constructor(id: number, label: string, freq: number) {
+  constructor(id: number, label: string, frequency: number) {
     this.id = id;
     this.label = label;
-    this.freq = freq;
+    this.frequency = frequency;
   }
 }
 
