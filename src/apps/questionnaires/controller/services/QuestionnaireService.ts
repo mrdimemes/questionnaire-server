@@ -6,6 +6,8 @@ import {
   FieldDTO,
   QuestionDTO
 } from "../../DTOs";
+import { SortOption } from "../../models";
+
 
 class QuestionnaireService {
   private questionnaireConnector = QuestionnaireConnector;
@@ -125,12 +127,24 @@ class QuestionnaireService {
     )
   }
 
-  async getQuestionnaireCardPage(startPage: number, bunchSize: number) {
+  async getQuestionnaireCardPage(
+    sortOption: SortOption | null,
+    searchPhrase: string,
+    filterTag: number | null,
+    startPage: number,
+    bunchSize: number,
+  ) {
     const totalCardsInDB = await this.questionnaireConnector
       .getQuestionnairesCount();
     const totalPages = Math.ceil(totalCardsInDB / bunchSize)
     const questionnaires = await this.questionnaireConnector
-      .getQuestionnairesBunch((startPage - 1) * bunchSize, bunchSize);
+      .getQuestionnairesBunch(
+        sortOption,
+        searchPhrase,
+        filterTag,
+        (startPage - 1) * bunchSize,
+        bunchSize,
+      );
     const cards = await Promise
       .all(questionnaires.map(async (questionnaire) => {
         const questionnaireTagRelations = await this.relationConnector

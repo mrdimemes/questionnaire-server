@@ -7,6 +7,7 @@ import {
   AddTagRequestBody,
   RemoveTagRequestBody
 } from "../types";
+import { SortOption } from "../models";
 
 dotenv.config();
 
@@ -43,12 +44,27 @@ class QuestionnairesController {
     }
   }
 
-  async getQuestionnaireCards(req: GetCardsRequest, res: Response, _next: Function) {
-    const { startPage, cardsPerPage } = req.query;
+  async getQuestionnaireCards(
+    req: GetCardsRequest,
+    res: Response,
+    _next: Function,
+  ) {
+    const {
+      sortOption,
+      searchPhrase,
+      filterTag,
+      startPage,
+      cardsPerPage,
+    } = req.query;
     const page = await this.questionnaireService
       .getQuestionnaireCardPage(
+        Object.values(SortOption).includes(sortOption as SortOption) ?
+          sortOption as SortOption :
+          null,
+        searchPhrase ?? "",
+        filterTag ?? null,
         startPage ?? 1,
-        Math.min(cardsPerPage ?? 10, this.maxCardsPerPage)
+        Math.min(cardsPerPage ?? 10, this.maxCardsPerPage),
       );
     return res.json(page);
   }

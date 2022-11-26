@@ -1,6 +1,9 @@
 import MySQLConnector from "src/apps/mysql-connector";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { Questionnaire, Question, Field } from "./models";
+import { SortOption } from "../models";
+import { getCardsSortOrder, getCardsSearch } from "./helpers";
+
 
 class QuestionnaireConnector {
   private connector = MySQLConnector;
@@ -103,8 +106,16 @@ class QuestionnaireConnector {
     return resultHeader.affectedRows;
   }
 
-  async getQuestionnairesBunch(offset: number, rowCount: number) {
-    const sql = "SELECT * FROM questionnaires LIMIT ?, ?";
+  async getQuestionnairesBunch(
+    sortOption: SortOption | null,
+    searchPhrase: string,
+    _filterTag:  number | null,
+    offset: number,
+    rowCount: number,
+  ) {
+    const order = getCardsSortOrder(sortOption);
+    const search = getCardsSearch(searchPhrase);
+    const sql = "SELECT * FROM questionnaires " + search + order + "LIMIT ?, ?";
     return await this.connector
       .query(sql, [offset, rowCount]) as Questionnaire[];
   }
