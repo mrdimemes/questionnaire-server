@@ -2,7 +2,7 @@ import MySQLConnector from "src/apps/mysql-connector";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { Questionnaire, Question, Field } from "./models";
 import { SortOption } from "../models";
-import { getCardsSortOrder, getCardsSearch } from "./helpers";
+import { getCardsSortOrder, getCardsSearch, getCardsTagFilter } from "./helpers";
 
 
 class QuestionnaireConnector {
@@ -109,13 +109,25 @@ class QuestionnaireConnector {
   async getQuestionnairesBunch(
     sortOption: SortOption | null,
     searchPhrase: string,
-    _filterTag:  number | null,
+    filterTag: number | null,
     offset: number,
     rowCount: number,
   ) {
     const order = getCardsSortOrder(sortOption);
     const search = getCardsSearch(searchPhrase);
-    const sql = "SELECT * FROM questionnaires " + search + order + "LIMIT ?, ?";
+    const tagFilter = getCardsTagFilter(filterTag);
+    const tagJoin = `
+      JOIN questionnaires_tags 
+      ON questionnaires.id = questionnaires_tags.questionnaire_id
+    `;
+    const sql = `
+      SELECT * FROM questionnaires 
+      ${filterTag ? tagJoin : ""} 
+      ${(search.length !== 0 || filterTag) ? "WHERE" : ""} ${search} 
+      ${search.length !== 0 ? "AND" : ""} ${tagFilter} 
+      ${order} 
+      LIMIT ?, ?
+    `;
     return await this.connector
       .query(sql, [offset, rowCount]) as Questionnaire[];
   }

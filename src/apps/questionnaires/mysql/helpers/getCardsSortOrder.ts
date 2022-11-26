@@ -5,9 +5,9 @@ const getCardsSortOrder = (sortOption: SortOption | null) => {
   if (!sortOption) return "";
   let order = "ORDER BY "
   if (sortOption === SortOption.Alphabet) {
-    order += "label "
+    order += "label"
   } else if (sortOption === SortOption.ReverseAlphabet) {
-    order += "label DESC "
+    order += "label DESC"
   } else if (sortOption === SortOption.NoSort) {
     return "";
   };
