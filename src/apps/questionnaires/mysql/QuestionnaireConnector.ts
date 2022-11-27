@@ -132,8 +132,19 @@ class QuestionnaireConnector {
       .query(sql, [offset, rowCount]) as Questionnaire[];
   }
 
-  async getQuestionnairesCount() {
-    const sql = "SELECT COUNT(*) FROM questionnaires";
+  async getQuestionnairesCount(searchPhrase: string, filterTag: number | null) {
+    const tagJoin = `
+      JOIN questionnaires_tags 
+      ON questionnaires.id = questionnaires_tags.questionnaire_id
+    `;
+    const search = getCardsSearch(searchPhrase);
+    const tagFilter = getCardsTagFilter(filterTag);
+    const sql = `
+      SELECT COUNT(*) FROM questionnaires 
+      ${filterTag ? tagJoin : ""} 
+      ${(search.length !== 0 || filterTag) ? "WHERE" : ""} ${search} 
+      ${(search.length !== 0 && filterTag) ?  "AND" : ""} ${tagFilter}
+    `;
     const result = await this.connector.query(sql) as RowDataPacket;
     return result[0]["COUNT(*)"] as number;
   }

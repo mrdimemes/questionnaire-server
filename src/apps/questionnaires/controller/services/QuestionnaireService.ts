@@ -134,9 +134,9 @@ class QuestionnaireService {
     startPage: number,
     bunchSize: number,
   ) {
-    const totalCardsInDB = await this.questionnaireConnector
-      .getQuestionnairesCount();
-    const totalPages = Math.ceil(totalCardsInDB / bunchSize)
+    const cardsInDB = await this.questionnaireConnector
+      .getQuestionnairesCount(searchPhrase, filterTag);
+    const totalPages = Math.ceil(cardsInDB / bunchSize);
     const questionnaires = await this.questionnaireConnector
       .getQuestionnairesBunch(
         sortOption,
