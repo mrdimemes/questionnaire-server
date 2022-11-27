@@ -124,7 +124,7 @@ class QuestionnaireConnector {
       SELECT * FROM questionnaires 
       ${filterTag ? tagJoin : ""} 
       ${(search.length !== 0 || filterTag) ? "WHERE" : ""} ${search} 
-      ${search.length !== 0 ? "AND" : ""} ${tagFilter} 
+      ${(search.length !== 0 && filterTag) ?  "AND" : ""} ${tagFilter} 
       ${order} 
       LIMIT ?, ?
     `;
