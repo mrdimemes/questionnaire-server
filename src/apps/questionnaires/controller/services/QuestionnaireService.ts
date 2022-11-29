@@ -53,7 +53,7 @@ class QuestionnaireService {
       .removeQuestionnaireTagRelationsByQuestionnaireId(questionnaireId);
     const questions = await this.questionnaireConnector
       .findQuestionnaireQuestions(questionnaireId);
-    for (const question of questions) {
+    for await (const question of questions) {
       affectedRows += (await this.removeQuestion(question.id)).affectedRows;
     }
     affectedRows +=
@@ -94,9 +94,9 @@ class QuestionnaireService {
   }
 
   async removeQuestion(questionId: number) {
-    await this.questionnaireConnector.removeQuestion(questionId);
     const removedFields = await this.questionnaireConnector
       .removeFieldsByQuestionId(questionId);
+    await this.questionnaireConnector.removeQuestion(questionId);
     return { affectedRows: 1 + removedFields };
   }
 
