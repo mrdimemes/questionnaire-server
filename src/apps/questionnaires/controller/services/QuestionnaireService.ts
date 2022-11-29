@@ -1,4 +1,8 @@
-import { QuestionnaireConnector, RelationConnector } from "../../mysql";
+import {
+  AnswerConnector,
+  QuestionnaireConnector,
+  RelationConnector,
+} from "../../mysql";
 import {
   QuestionnaireDTO,
   QuestionnaireCardDTO,
@@ -12,6 +16,7 @@ import { SortOption } from "../../models";
 class QuestionnaireService {
   private questionnaireConnector = QuestionnaireConnector;
   private relationConnector = RelationConnector;
+  private answerConnector = AnswerConnector;
 
   async addQuestionnaire(
     label: string,
@@ -42,16 +47,35 @@ class QuestionnaireService {
   }
 
   async removeQuestionnaire(questionnaireId: number) {
-    await this.questionnaireConnector.removeQuestionnaire(questionnaireId);
-    let affectedRows = 1;
+    let affectedRows = 0;
+    affectedRows += await this.answerConnector.deleteAnswers(questionnaireId);
+    affectedRows += await this.relationConnector
+      .removeQuestionnaireTagRelationsByQuestionnaireId(questionnaireId);
     const questions = await this.questionnaireConnector
       .findQuestionnaireQuestions(questionnaireId);
     for (const question of questions) {
       affectedRows += (await this.removeQuestion(question.id)).affectedRows;
     }
-    affectedRows += await this.relationConnector
-      .removeQuestionnaireTagRelationsByQuestionnaireId(questionnaireId)
+    affectedRows +=
+      await this.questionnaireConnector.removeQuestionnaire(questionnaireId);
     return { affectedRows };
+  }
+
+  async editQuestionnaire(questionnaire: QuestionnaireDTO) {
+    await this.removeQuestionnaire(questionnaire.id);
+    await this.addQuestionnaire(
+      questionnaire.label,
+      questionnaire.about,
+      questionnaire.questions.map(questionDTO => {
+        return {
+          questionType: questionDTO.questionType,
+          text: questionDTO.text,
+          isRequired: questionDTO.isRequired,
+          fields: questionDTO.fields.map(fieldDTO => fieldDTO.text),
+        }
+      }),
+      questionnaire.tags,
+    );
   }
 
   async addQuestion(

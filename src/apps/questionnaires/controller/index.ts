@@ -5,7 +5,9 @@ import {
   GetCardsRequest,
   SaveAnswerRequestBody,
   AddTagRequestBody,
-  RemoveTagRequestBody
+  RemoveTagRequestBody,
+  AddQuestionnaireRequestBody,
+  EditQuestionnaireRequestBody,
 } from "../types";
 import { SortOption } from "../models";
 
@@ -80,6 +82,38 @@ class QuestionnairesController {
       const { userId, answer } =
         req.body as SaveAnswerRequestBody;
       await this.answerService.saveAnswer(answer, userId);
+      return res.json();
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async addQuestionnaire(req: Request, res: Response, next: Function) {
+    try {
+      const { questionnaire } = req.body as AddQuestionnaireRequestBody;
+      const response = await this.questionnaireService.addQuestionnaire(
+        questionnaire.label,
+        questionnaire.label,
+        questionnaire.questions.map(questionDTO => {
+          return {
+            questionType: questionDTO.questionType,
+            text: questionDTO.text,
+            isRequired: questionDTO.isRequired,
+            fields: questionDTO.fields.map(fieldDTO => fieldDTO.text),
+          };
+        }),
+        questionnaire.tags,
+      );
+      return res.json(response);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async editQuestionnaire(req: Request, res: Response, next: Function) {
+    try {
+      const { questionnaire } = req.body as EditQuestionnaireRequestBody;
+      await this.questionnaireService.editQuestionnaire(questionnaire);
       return res.json();
     } catch (err) {
       next(err);

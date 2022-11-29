@@ -16,3 +16,9 @@ export type {
 } from "./AnswerQuestionFromClient";
 export type { default as AnswerFromClient } from "./AnswerFromClient";
 export { default as QuestionTypeEnum } from "./QuestionTypeEnum";
+export type {
+  default as AddQuestionnaireRequestBody
+} from "./AddQuestionnaireRequestBody";
+export type {
+  default as EditQuestionnaireRequestBody
+} from "./EditQuestionnaireRequestBody";

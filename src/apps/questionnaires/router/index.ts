@@ -13,5 +13,11 @@ router.post(
 );
 router.post("/addTag", controller.addTag.bind(controller));
 router.post("/removeTag", controller.removeTag.bind(controller));
+router.post("/addQuestionnaire", controller.addQuestionnaire.bind(controller));
+router.post(
+  "/editQurstionnaire",
+  controller.editQuestionnaire.bind(controller),
+);
+
 
 export default router;
