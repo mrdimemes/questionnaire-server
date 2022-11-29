@@ -18,6 +18,6 @@ router.post(
   "/editQuestionnaire",
   controller.editQuestionnaire.bind(controller),
 );
-
+router.get("/getAnswers/:id", controller.getAnswers.bind(controller));
 
 export default router;

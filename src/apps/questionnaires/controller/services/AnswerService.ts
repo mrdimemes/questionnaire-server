@@ -15,6 +15,11 @@ class AnswerService {
       }
     }
   }
+
+  async getAnswers(questionnaireId: number) {
+    return this.answerConnector.getAnswersWithFields(questionnaireId);
+  }
+
 }
 
 export default new AnswerService();

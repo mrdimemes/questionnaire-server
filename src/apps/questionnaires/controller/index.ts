@@ -119,6 +119,11 @@ class QuestionnairesController {
       next(err);
     }
   }
+
+  async getAnswers(req: Request, res: Response, _next: Function) {
+    const answers = await this.answerService.getAnswers(Number(req.params.id));
+    return res.json(answers);
+  }
 }
 
 export default new QuestionnairesController();
