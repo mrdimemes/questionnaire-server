@@ -15,7 +15,7 @@ router.post("/addTag", controller.addTag.bind(controller));
 router.post("/removeTag", controller.removeTag.bind(controller));
 router.post("/addQuestionnaire", controller.addQuestionnaire.bind(controller));
 router.post(
-  "/editQurstionnaire",
+  "/editQuestionnaire",
   controller.editQuestionnaire.bind(controller),
 );
 
