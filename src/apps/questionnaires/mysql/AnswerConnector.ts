@@ -76,14 +76,14 @@ class AnswerConnector {
     return await this.connector.query(sql, [userId]) as Answer[];
   }
 
-  async getLastUserAnswers(n: number) {
+  async getLastUserAnswers(userId: number, n: number) {
     const sql = `
     SELECT * FROM answers 
     WHERE user_id = ? 
     ORDER BY upload_date 
-    LIMIT(?)
+    LIMIT ?
     `
-    return await this.connector.query(sql, [n]) as Answer[];
+    return await this.connector.query(sql, [userId, n]) as Answer[];
   }
 }
 

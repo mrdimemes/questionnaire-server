@@ -30,7 +30,8 @@ class AnswerService {
       .getUserAnswers(userId, 30)).length;
     const yearAnswers = (await this.answerConnector
       .getUserAnswers(userId, 365)).length;
-    const lastAnswers = await this.answerConnector.getLastUserAnswers(3);
+    const lastAnswers = await this.answerConnector
+      .getLastUserAnswers(userId, 3);
     return new StatisticsDTO(
       userId,
       totalAnswers,
