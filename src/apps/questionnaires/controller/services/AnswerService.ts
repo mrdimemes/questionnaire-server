@@ -42,7 +42,6 @@ class AnswerService {
         return new AnswerDTO(answer.questionnaire_id, answer.upload_date)
       }),
     );
-    [totalAnswers, weekAnswers, monthAnswers, yearAnswers, lastAnswers]
   }
 }
 
