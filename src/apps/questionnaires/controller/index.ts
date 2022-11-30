@@ -124,6 +124,12 @@ class QuestionnairesController {
     const answers = await this.answerService.getAnswers(Number(req.params.id));
     return res.json(answers);
   }
+
+  async getStatistics(req: Request, res: Response, _next: Function) {
+    const statistics =
+      await this.answerService.getUserStatistics(Number(req.params.id));
+    return res.json(statistics);
+  }
 }
 
 export default new QuestionnairesController();

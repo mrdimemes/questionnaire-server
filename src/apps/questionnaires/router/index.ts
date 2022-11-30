@@ -19,5 +19,6 @@ router.post(
   controller.editQuestionnaire.bind(controller),
 );
 router.get("/getAnswers/:id", controller.getAnswers.bind(controller));
+router.get("/getStatistics/:id", controller.getStatistics.bind(controller));
 
 export default router;

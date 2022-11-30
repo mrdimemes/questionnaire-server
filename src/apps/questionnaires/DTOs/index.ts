@@ -6,3 +6,5 @@ export { default as QuestionnaireCardDTO } from "./QuestionnaireCardDTO";
 export {
   default as QuestionnaireCardsPageDTO
 } from "./QuestionnaireCardsPageDTO";
+export { default as AnswerDTO } from "./AnswerDTO";
+export { default as StatisticsDTO } from "./StatisticsDTO";

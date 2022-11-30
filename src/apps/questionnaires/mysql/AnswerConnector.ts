@@ -66,6 +66,25 @@ class AnswerConnector {
       .query(sql, [answerId]) as ResultSetHeader;
     return resultHeader.affectedRows;
   }
+
+  async getUserAnswers(userId: number, period?: number) {
+    const sql = `
+    SELECT * FROM answers 
+    WHERE user_id = ? 
+    ${period ? "AND DATEDIFF(CURDATE(), upload_date) < " + period : ""}
+    `
+    return await this.connector.query(sql, [userId]) as Answer[];
+  }
+
+  async getLastUserAnswers(n: number) {
+    const sql = `
+    SELECT * FROM answers 
+    WHERE user_id = ? 
+    ORDER BY upload_date 
+    LIMIT(?)
+    `
+    return await this.connector.query(sql, [n]) as Answer[];
+  }
 }
 
 export default new AnswerConnector();
