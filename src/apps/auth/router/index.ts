@@ -1,10 +1,7 @@
 import { Router } from "express";
 import controller from "../controller";
-import { authMiddleware } from "../middlewares";
 
 const router = Router();
-
-router.use(authMiddleware);
 
 router.post("/registration", controller.registration.bind(controller));
 router.post("/login", controller.login.bind(controller));

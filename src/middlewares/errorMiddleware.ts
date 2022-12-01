@@ -7,7 +7,7 @@ function errorMiddleware(
   res: Response,
   _next: Function
 ) {
-  console.log(err);
+  console.log("Error:", err.message);
 
   if (err instanceof ApiError && err.status !== 500) {
     return res.status(err.status).json({

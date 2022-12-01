@@ -1,21 +1,28 @@
 import { Request, Response } from "express";
 import { AuthError } from "../exceptions";
-import { TokenService } from "../controller/services";
+import { TokenService, UserService } from "../controller/services";
 
 import type { TokenPayload } from "../types";
 
-function authMiddleware(req: Request, _res: Response, next: Function) {
+function adminRightsMiddleware(req: Request, _res: Response, next: Function) {
   const authHeader = req.headers.authorization;
   if (!authHeader) return next(AuthError.UnauthorizedError());
   const accessToken = authHeader.split(" ")[1];
   if (!accessToken) return next(AuthError.UnauthorizedError());
   try {
-    req.body.user =
+    const tokenPayload =
       TokenService.validateAccessToken(accessToken) as TokenPayload;
+    UserService.findUser(tokenPayload.userId).then(user => {
+      if (user.is_admin) {
+        req.body.user = tokenPayload;
+      } else {
+        return next(AuthError.ForbiddenError());
+      }
+    });
   } catch (e) {
-    return next(AuthError.UnauthorizedError());
+    return next(AuthError.ForbiddenError());
   }
   next();
 }
 
-export default authMiddleware;
+export default adminRightsMiddleware;
