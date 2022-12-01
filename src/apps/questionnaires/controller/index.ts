@@ -21,9 +21,13 @@ class QuestionnairesController {
   private maxCardsPerPage =
     Number(process.env.MAX_QUESTIONNAIRE_CARDS_PER_PAGE ?? "50");
 
-  async getTags(_req: Request, res: Response, _next: Function) {
-    const tagDTOs = await this.tagService.getTags();
-    return res.json(tagDTOs);
+  async getTags(_req: Request, res: Response, next: Function) {
+    try {
+      const tagDTOs = await this.tagService.getTags();
+      return res.json(tagDTOs);
+    } catch (err) {
+      next(err);
+    }
   }
 
   async addTag(req: Request, res: Response, next: Function) {
@@ -49,32 +53,41 @@ class QuestionnairesController {
   async getQuestionnaireCards(
     req: GetCardsRequest,
     res: Response,
-    _next: Function,
+    next: Function,
   ) {
-    const {
-      sortOption,
-      searchPhrase,
-      filterTag,
-      startPage,
-      cardsPerPage,
-    } = req.query;
-    const page = await this.questionnaireService
-      .getQuestionnaireCardPage(
-        Object.values(SortOption).includes(sortOption as SortOption) ?
-          sortOption as SortOption :
-          null,
-        searchPhrase ?? "",
-        filterTag ?? null,
-        startPage ?? 1,
-        Math.min(cardsPerPage ?? 10, this.maxCardsPerPage),
-      );
-    return res.json(page);
+    try {
+      const {
+        sortOption,
+        searchPhrase,
+        filterTag,
+        startPage,
+        cardsPerPage,
+      } = req.query;
+      const page = await this.questionnaireService
+        .getQuestionnaireCardPage(
+          Object.values(SortOption).includes(sortOption as SortOption) ?
+            sortOption as SortOption :
+            null,
+          searchPhrase ?? "",
+          filterTag ?? null,
+          startPage ?? 1,
+          Math.min(cardsPerPage ?? 10, this.maxCardsPerPage),
+        );
+      return res.json(page);
+    } catch (err) {
+      next(err);
+    }
   }
 
-  async getQuestionnaire(req: Request, res: Response, _next: Function) {
-    const questionnaireDTO = await this.questionnaireService
-      .getQuestionnaire(Number(req.params.id));
-    return res.json(questionnaireDTO);
+  async getQuestionnaire(req: Request, res: Response, next: Function) {
+    try {
+      const questionnaireDTO = await this.questionnaireService
+        .getQuestionnaire(Number(req.params.id));
+      return res.json(questionnaireDTO);
+    } catch (err) {
+      next(err);
+    }
+
   }
 
   async saveQuestionnaireAnswer(req: Request, res: Response, next: Function) {
@@ -120,15 +133,24 @@ class QuestionnairesController {
     }
   }
 
-  async getAnswers(req: Request, res: Response, _next: Function) {
-    const answers = await this.answerService.getAnswers(Number(req.params.id));
-    return res.json(answers);
+  async getAnswers(req: Request, res: Response, next: Function) {
+    try {
+      const answers = await this.answerService
+        .getAnswers(Number(req.params.id));
+      return res.json(answers);
+    } catch (err) {
+      next(err);
+    }
   }
 
-  async getStatistics(req: Request, res: Response, _next: Function) {
-    const statistics =
-      await this.answerService.getUserStatistics(Number(req.params.id));
-    return res.json(statistics);
+  async getStatistics(req: Request, res: Response, next: Function) {
+    try {
+      const statistics =
+        await this.answerService.getUserStatistics(Number(req.params.id));
+      return res.json(statistics);
+    } catch (err) {
+      next(err);
+    }
   }
 }
 
